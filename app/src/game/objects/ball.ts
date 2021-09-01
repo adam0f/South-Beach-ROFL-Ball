@@ -1,4 +1,4 @@
-import { getGameHeight, getGameWidth } from "game/helpers";
+import { getGameHeight } from "game/helpers";
 import { BALL } from "game/assets";
 
 export class Ball extends Phaser.GameObjects.Image {
@@ -17,7 +17,4 @@ export class Ball extends Phaser.GameObjects.Image {
         (this.body as Phaser.Physics.Arcade.Body).setCollideWorldBounds(true, 0, 0.9);
         this.setPosition(dropLocation, 0)
     }
-
-
-
 }
