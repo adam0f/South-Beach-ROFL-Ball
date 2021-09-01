@@ -22,6 +22,7 @@ export const LEFT_CHEVRON = 'left_chevron';
 export const CLICK = 'click';
 export const BALL = 'ball'
 export const BOTTOM = 'bottom'
+export const CRAB = 'crab'
 
 // Save all in game assets in the public folder
 export const assets: Array<Asset | SpritesheetAsset> = [
@@ -56,6 +57,15 @@ export const assets: Array<Asset | SpritesheetAsset> = [
     data: {
       frameWidth: 1024,
       frameHeight: 96,
+    }
+  },
+  {
+    key: CRAB,
+    src: 'assets/sprites/crab.png',
+    type: 'SPRITESHEET',
+    data: {
+      frameWidth: 461 / 1,
+      frameHeight: 321 / 1,
     }
   },
 ];
