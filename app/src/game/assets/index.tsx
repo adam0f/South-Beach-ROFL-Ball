@@ -20,6 +20,8 @@ export const BG = 'bg';
 export const FULLSCREEN = 'fullscreen';
 export const LEFT_CHEVRON = 'left_chevron';
 export const CLICK = 'click';
+export const BALL = 'ball'
+export const BOTTOM = 'bottom'
 
 // Save all in game assets in the public folder
 export const assets: Array<Asset | SpritesheetAsset> = [
@@ -37,5 +39,23 @@ export const assets: Array<Asset | SpritesheetAsset> = [
     key: CLICK,
     src: 'assets/sounds/click.mp3',
     type: 'AUDIO',
+  },
+  {
+    key: BALL,
+    src: 'assets/sprites/ball.png',
+    type: 'SPRITESHEET',
+    data: {
+      frameWidth: 490 / 1,
+      frameHeight: 490 / 1,
+    }
+  },
+  {
+    key: BOTTOM,
+    src: 'assets/sprites/bottom.png',
+    type: 'SPRITESHEET',
+    data: {
+      frameWidth: 1024,
+      frameHeight: 96,
+    }
   },
 ];
