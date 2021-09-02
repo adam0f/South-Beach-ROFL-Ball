@@ -4,9 +4,7 @@ import { CRAB } from "game/assets";
 export class Crab extends Phaser.GameObjects.Image {
     constructor(scene: Phaser.Scene) {
         super(scene, -100, -100, CRAB, 0)
-        this.setOrigin(0, 0)
-        this.displayHeight = getGameHeight(scene) / 12
-        this.displayWidth = getGameHeight(scene) / 12
+        this.setOrigin(0, 0)   
     }
 
     public activate = (size: number, speed: number, direction: number) => {
@@ -21,8 +19,13 @@ export class Crab extends Phaser.GameObjects.Image {
         } 
 
         this.displayHeight = getGameHeight(this.scene) * 0.1 *(size / 2)
-        this.displayWidth = getGameHeight(this.scene) * 0.1 *(size / 2)
-        this.setPosition        
+        this.displayWidth = getGameHeight(this.scene) * 0.1 *(size / 2)       
+    }
+
+    public update = () => {
+        if (this.x < -1 || this.x > getGameWidth(this.scene) || this.y > getGameHeight(this.scene)) {
+            (this.body as Phaser.Physics.Arcade.Body).destroy()
+        }
     }
 }
 
