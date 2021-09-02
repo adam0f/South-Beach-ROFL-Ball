@@ -11,16 +11,25 @@ export class Crab extends Phaser.GameObjects.Image {
         this.scene.physics.world.enable(this);
 
         if (direction === 0) {
-            (this.body as Phaser.Physics.Arcade.Body).setVelocityX(speed)
+            (this.body as Phaser.Physics.Arcade.Body).setVelocityX(speed * 0.15 + 200)
             this.setPosition(0, getGameHeight(this.scene) * 0.7)
         } else {
-            (this.body as Phaser.Physics.Arcade.Body).setVelocityX(-speed)
+            (this.body as Phaser.Physics.Arcade.Body).setVelocityX(-(speed * 0.15 + 200))
             this.setPosition(getGameWidth(this.scene), getGameHeight(this.scene) * 0.8)
         } 
 
         this.displayHeight = getGameHeight(this.scene) * 0.1 *(size / 2)
         this.displayWidth = getGameHeight(this.scene) * 0.1 *(size / 2)       
     }
+
+    // public kill = (dead: boolean) => {
+    //     this.scene.physics.world.enable(this);
+
+    //     if (dead === true) {
+    //     (this.body as Phaser.Physics.Arcade.Body).destroy();
+    //     this.setVisible(false)
+    //     }
+    // }
 
     public update = () => {
         if (this.x < -1 || this.x > getGameWidth(this.scene) || this.y > getGameHeight(this.scene)) {

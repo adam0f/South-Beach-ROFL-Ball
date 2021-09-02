@@ -40,7 +40,7 @@ export class GameScene extends Phaser.Scene {
 
   private getCrab = () => {
     const size = Math.floor(Math.random() * 3) + 1 
-    const speed = Math.floor((Math.random() * 2) *  getGameWidth(this))
+    const speed = (Math.random() * 2) *  getGameWidth(this)
     const direction = Math.floor(Math.random() * 2) 
 
     this.crabType(size, speed, direction)
@@ -82,7 +82,7 @@ export class GameScene extends Phaser.Scene {
     this.createBackButton();
     this.scoreText = this.add.text(getGameWidth(this) * 0.5, getGameHeight(this) * 0.15, this.score.toString(), { color: '0x005500'}).setFontSize(getRelative(94, this)).setOrigin(0.5).setDepth(1)
     this.ballCountText = this.add.text(getGameWidth(this) * 0.2, getGameHeight(this) * 0.15, this.ballCount.toString(), { color: '0x000000'}).setFontSize(getRelative(94, this)).setOrigin(0.5).setDepth(1)
-    this.tolText = this.add.text(getGameWidth(this) * 0.8, getGameHeight(this) * 0.15, this.ballCount.toString(), { color: '0x000000'}).setFontSize(getRelative(94, this)).setOrigin(0.5).setDepth(1)
+    this.tolText = this.add.text(getGameWidth(this) * 0.8, getGameHeight(this) * 0.15, this.toleranceLevel.toString(), { color: '0x000000'}).setFontSize(getRelative(94, this)).setOrigin(0.5).setDepth(1)
 
     const bottom = this.add.sprite(getGameWidth(this)/2 , getGameHeight(this) * 0.75 + getGameHeight(this) / 5.3333, BOTTOM).setDisplaySize(getGameWidth(this), getGameHeight(this) / 5.3333)  
     this.physics.add.existing(bottom, true)
@@ -103,6 +103,7 @@ export class GameScene extends Phaser.Scene {
 
     this.getCrab()
 
+    //reduce delay as score increases 
     this.time.addEvent({
       delay: 1000,
       callback: this.getCrab,
@@ -116,14 +117,6 @@ export class GameScene extends Phaser.Scene {
     })   
 
     this.ballGenerate()    
-
-    // this.time.addEvent({
-    //   delay: 2000,
-    //   callback: this.ballGenerate, 
-    //   callbackScope: this,
-    //   loop: true,
-    // })
-   
 
     // Add a player sprite that can be moved around.
     this.player = new Player({
@@ -139,33 +132,19 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(rightWall, this.balls);
     this.physics.add.collider(this.player,this.balls, () => { this.addScore() });
     this.physics.add.collider(this.balls, this.crabs, () => { this.cycleBall() });
-    this.physics.add.overlap(this.player, this.crabs, () => { this.lowerTolerance() });
+    this.physics.add.collider(this.player, this.crabs, (player, Crab) => { Crab.destroy(), this.toleranceLevel--, this.tolText?.setText(this.toleranceLevel.toString())})
   }
-
-  private lowerTolerance() {
-    if (this.toleranceLevel > 0) {
-      this.toleranceLevel--;
-      this.crabs?.setVisible(false)
-         Phaser.Actions.Call((this.crabs as Phaser.GameObjects.Group).getChildren(), (crab) => { 
-          (crab.body as Phaser.Physics.Arcade.Body).destroy()
-          },
-          this,);
-          this.tolText?.setText(this.toleranceLevel.toString())
-    }
-
-  }
-
+  
   private cycleBall() {
     if (this.ballCount > 0) {
       this.ballCount--;
-      this.balls?.setVisible(false)
-      // Phaser.Actions.Call((this.balls as Phaser.GameObjects.Group).getChildren(), (ball) => { 
-      //   (ball.body as Phaser.Physics.Arcade.Body).destroy();
-      //   },
-      // this,)
+      //add a frame for popped ball
+       Phaser.Actions.Call((this.balls as Phaser.GameObjects.Group).getChildren(), (ball) => { 
+        (ball.body as Phaser.Physics.Arcade.Body).destroy();
+        },
+      this,)
       this.ballCountText?.setText(this.ballCount.toString())
-    } else {  
-      window.history.back();
+      this.balldead = true
     }
   }
 
@@ -185,9 +164,16 @@ export class GameScene extends Phaser.Scene {
         window.history.back();
       });
   };
-  
+
   public update(): void {
     // Every frame, we update the player
-    this.player?.update();    
+    this.player?.update();   
+
+    if (this.balldead === true && this.ballCount > 0) {
+      this.ballGenerate()
+      this.balldead = false 
+    } else if (this.ballCount === 0) {
+      window.history.back();
+    }
   }
 }
