@@ -112,7 +112,7 @@ export class GameScene extends Phaser.Scene {
     })
 
     this.balls = this.add.group({
-      maxSize: 100,
+      maxSize: 5,
       classType: Ball,
     })   
 
@@ -167,7 +167,7 @@ export class GameScene extends Phaser.Scene {
 
   public update(): void {
     // Every frame, we update the player
-    this.player?.update();   
+    this.player?.update();
 
     if (this.balldead === true && this.ballCount > 0) {
       this.ballGenerate()
