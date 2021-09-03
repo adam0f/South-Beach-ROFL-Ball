@@ -17,7 +17,7 @@
 
 .highscore {
   margin: 1.6rem auto 3.2rem;
-  color: white;
+  color: #7b5708;
 }
 
 .gotchiContainer img {
@@ -36,7 +36,7 @@
 }
 
 .errorContainer {
-  color: white;
+  color: #7b5708;
   max-width: 60rem;
   margin: 5.4rem auto;
 }
@@ -60,10 +60,12 @@
 
 .modalContent h1 {
   font-size: 3.2rem;
+  color: #7b5708;
 }
 .modalContent p {
   font-size: 1.4rem;
   line-height: 1.5;
+  color: #7b5708;
 }
 
 @media only screen and (min-width: 768px) {

@@ -14,6 +14,7 @@ import { getDefaultGotchi, getPreviewGotchi } from "helpers/aavegotchi";
 import gotchiLoading from "assets/gifs/loading.gif";
 import { playSound } from "helpers/hooks/useSound";
 import styles from "./styles.module.css";
+import cat from "assets/images/cat.png"
 
 const Home = () => {
   const {
@@ -153,11 +154,11 @@ const Home = () => {
       {showRulesModal && (
         <Modal onHandleClose={() => setShowRulesModal(false)}>
           <div className={styles.modalContent}>
-            <h1>Minigame Template</h1>
-            <p>Just a modal example. You can put your game rules in here.</p>
+            <img src={cat} alt="OOPS" />
           </div>
         </Modal>
       )}
+      <div id="title">South Beach ROFL Ball!!</div>
       <div className={globalStyles.container}>
         <div className={styles.homeContainer}>
           <div className={styles.selectorContainer}>
@@ -213,6 +214,7 @@ const Home = () => {
             />
           </div>
         </div>
+        <div id="story">GM fren! It&#180s beach day!</div>
       </div>
     </Layout>
   );

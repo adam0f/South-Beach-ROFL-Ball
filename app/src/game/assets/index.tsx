@@ -46,8 +46,8 @@ export const assets: Array<Asset | SpritesheetAsset> = [
     src: 'assets/sprites/ball.png',
     type: 'SPRITESHEET',
     data: {
-      frameWidth: 490 / 1,
-      frameHeight: 490 / 1,
+      frameWidth: 480,
+      frameHeight: 480,
     }
   },
   {

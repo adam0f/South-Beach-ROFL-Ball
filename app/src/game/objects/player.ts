@@ -38,7 +38,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     // input
     //this.cursorKeys = scene.input.keyboard.createCursorKeys();
-    this.jumpKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+    this.jumpKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
     this.leftKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
     this.rightKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
     
@@ -49,11 +49,11 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     if (this.leftKey.isDown) 
     {
-      (this.body as Phaser.Physics.Arcade.Body).setVelocityX(-getGameWidth(this.scene) /4)
+      (this.body as Phaser.Physics.Arcade.Body).setVelocityX(-getGameWidth(this.scene) * 0.5)
     }
     else if (this.rightKey.isDown)
     {
-      (this.body as Phaser.Physics.Arcade.Body).setVelocityX(getGameWidth(this.scene) / 4)
+      (this.body as Phaser.Physics.Arcade.Body).setVelocityX(getGameWidth(this.scene) * 0.5)
     }
     else 
     {
@@ -62,7 +62,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     if (this.jumpKey.isDown && (this.body as Phaser.Physics.Arcade.Body).touching.down)
     {
-      (this.body as Phaser.Physics.Arcade.Body).setVelocityY(-getGameHeight(this.scene) * 0.9)
+      (this.body as Phaser.Physics.Arcade.Body).setVelocityY(-getGameHeight(this.scene) * 1)
       this.anims.play('Jump')
     }
   }

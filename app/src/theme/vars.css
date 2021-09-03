@@ -1,10 +1,10 @@
 :root {
   --color-dark_0: #080315;
-  --color-dark_1: #12032E;
-  --color-dark_2: #47238D;
+  --color-dark_1: #6cdfff;
+  --color-dark_2: #7b5708;
 
-  --color-pink_0: #FC16F4;
-  --color-purple_0: #6D18F8;
+  --color-pink_0: #6e9aff;
+  --color-purple_0: #273ed3;
 
   --container-width-xl: 120rem;
 }
