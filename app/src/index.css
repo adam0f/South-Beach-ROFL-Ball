@@ -36,10 +36,9 @@ html {
   font-weight: bold;
 }
 
-#devinfo{
- 
+#devinfo{ 
   text-align: center;
-  font-size:x-large;
+  font-size:large;
   color: #7b5708;
   font-weight: bolder;
 }

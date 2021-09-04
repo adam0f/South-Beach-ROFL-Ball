@@ -87,6 +87,10 @@ export const DetailsPanel = ({ selectedGotchi }: Props) => {
             {renderModifier('Irritation tolerance', calculatePercentage(selectedGotchi?.withSetsNumericTraits[i] as number))}
           </>
         );
+      case 4:
+        return (
+          <div id="devinfo"><span>Designed and developed by adamn.eth</span></div>
+        );
       default:
     }
   };

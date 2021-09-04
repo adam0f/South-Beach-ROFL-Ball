@@ -1,5 +1,5 @@
 import {
-  LEFT_CHEVRON, BG, CLICK, BOTTOM, TREES,
+  LEFT_CHEVRON, BG, CLICK, BOTTOM, TREES, BOP, POP
 } from 'game/assets';
 import { AavegotchiGameObject } from 'types';
 import { getGameWidth, getGameHeight, getRelative } from '../helpers';
@@ -30,8 +30,8 @@ export class GameScene extends Phaser.Scene {
 
   // Sounds
   private back?: Phaser.Sound.BaseSound;
- // private bopSound?: Phaser.Sound.BaseSound;
- // private popSound?: Phaser.Sound.BaseSound;
+ private bopSound?: Phaser.Sound.BaseSound;
+ private popSound?: Phaser.Sound.BaseSound;
  //private boopSound?: Phaser.Sound.BaseSound;
 
   constructor() {
@@ -83,8 +83,8 @@ export class GameScene extends Phaser.Scene {
     this.add.image(getGameWidth(this) / 2, getGameHeight(this) / 2, BG).setDisplaySize(getGameWidth(this), getGameHeight(this));
     this.add.image(getGameWidth(this) / 2, getGameHeight(this) / 2, TREES).setDisplaySize(getGameWidth(this), getGameHeight(this)).setDepth(0.75);
     this.back = this.sound.add(CLICK, { loop: false });
-    //this.bopSound = this.sound.add(BOP, { loop: false});
-    //this.popSound = this.sound.add(POP, { loop: false});
+    this.bopSound = this.sound.add(BOP, { loop: false});
+    this.popSound = this.sound.add(POP, { loop: false});
     //this.boopSound = this.sound.add(BOOP, {loop: false})
     this.createBackButton();
     this.gameBoard = this.add.text(getGameWidth(this) * 0.5, getGameHeight(this) * 0.1, 'Balls Remaining   Score   Irritation Tolerance', { color: '#604000' }).setFontSize(getRelative(50, this)).setOrigin(0.5).setDepth(1)
@@ -137,14 +137,14 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(floor, this.balls);
     this.physics.add.collider(leftWall, this.balls);
     this.physics.add.collider(rightWall, this.balls);
-    this.physics.add.collider(this.player,this.balls, () => { this.addScore();/*this.bopSound?.play()*/ });
+    this.physics.add.collider(this.player,this.balls, () => { this.addScore(); this.bopSound?.play() });
     this.physics.add.collider(this.balls, this.crabs, () => { this.cycleBall() });
     this.physics.add.collider(this.player, this.crabs, (_, Crab) => { Crab.destroy(), this.toleranceLevel--, this.tolText?.setText(this.toleranceLevel.toString())})
   }
   
   private cycleBall() {
     if (this.ballCount > 0) {
-    // this.popSound?.play();
+     this.popSound?.play();
       this.ballCount--;
        Phaser.Actions.Call((this.balls as Phaser.GameObjects.Group).getChildren(), (ball) => { 
         (ball.body as Phaser.Physics.Arcade.Body).destroy();
