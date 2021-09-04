@@ -215,7 +215,7 @@ const Home = () => {
           </div>
         </div>
         <div id="story">GM fren! Its beach day! </div>
-        <div id="devinfo">Designed and Developed By adamn.eth</div>
+        <div id="devinfo"><span>Designed and developed by adamn.eth</span></div>
       </div>
     </Layout>
   );

@@ -31,8 +31,8 @@ export class GameScene extends Phaser.Scene {
   // Sounds
   private back?: Phaser.Sound.BaseSound;
  // private bopSound?: Phaser.Sound.BaseSound;
-  // private popSound?: Phaser.Sound.BaseSound;
-  //private boopSound?: Phaser.Sound.BaseSound;
+ // private popSound?: Phaser.Sound.BaseSound;
+ //private boopSound?: Phaser.Sound.BaseSound;
 
   constructor() {
     super(sceneConfig);
@@ -41,6 +41,15 @@ export class GameScene extends Phaser.Scene {
   init = (data: { selectedGotchi: AavegotchiGameObject }): void => {
     this.selectedGotchi = data.selectedGotchi;
   };
+
+  // private energyScale = () => {
+  //   const speed = this.selectedGotchi?.withSetsNumericTraits[0] as number * 0.5
+  //   this.passEnergy(speed)
+  // }
+  // private passEnergy = (speed: number): void => {
+  //   const playerEnergy = this.player?.get()
+  //   playerEnergy.activate(speed)
+  // }
 
   private getCrab = () => {
     const size = Math.floor(Math.random() * 3) + 1 
@@ -53,36 +62,24 @@ export class GameScene extends Phaser.Scene {
   private crabType = (size: number, speed: number, direction: number): void => {
     const crab: Crab = this.crabs?.get()
     crab.activate(size, speed, direction)
-
   }
 
   private ballGenerate = () => {
     const dropLocation = 0
     const dropAngle = 600
-    const bounce = this.selectedGotchi?.withSetsNumericTraits[1] as number * 0.005
+    const bounce = this.selectedGotchi?.withSetsNumericTraits[1] as number * 0.003
 
     this.dropBall(dropLocation, dropAngle, bounce)
-
-  // PLACEMENT NEEDS TO BE STATIC or based on trait - kinship????
-  //   const placement = Math.floor(Math.random() * 6) + 1
-  //   const dropAngle = Math.floor(Math.random() * (getGameWidth(this) / 5))
-  //   for (let i = 0; i < 6; i++) {
-  //     if (i == placement ) {
-  //       const dropLocation = placement * (getGameWidth(this) / 6)
-  //          this.dropBall(dropLocation, dropAngle)
-  //     } 
-  //  }
  }
 
   private dropBall = (dropLocation: number, dropAngle: number, bounce: number): void => {
     const ball: Ball = this.balls?.get()
     ball.activate(dropLocation, dropAngle, bounce)
-
   }
 
   public create(): void {
     // Add layout
-    this.toleranceLevel = (25 + (this.selectedGotchi?.withSetsNumericTraits[3] as number * 0.5))
+    this.toleranceLevel = Math.floor(50 - (this.selectedGotchi?.withSetsNumericTraits[3] as number * 0.4))
     this.add.image(getGameWidth(this) / 2, getGameHeight(this) / 2, BG).setDisplaySize(getGameWidth(this), getGameHeight(this));
     this.add.image(getGameWidth(this) / 2, getGameHeight(this) / 2, TREES).setDisplaySize(getGameWidth(this), getGameHeight(this)).setDepth(0.75);
     this.back = this.sound.add(CLICK, { loop: false });
@@ -90,7 +87,7 @@ export class GameScene extends Phaser.Scene {
     //this.popSound = this.sound.add(POP, { loop: false});
     //this.boopSound = this.sound.add(BOOP, {loop: false})
     this.createBackButton();
-    this.gameBoard = this.add.text(getGameWidth(this) * 0.5, getGameHeight(this) * 0.1, 'Balls Remaining   Score   Irritation level', { color: '#604000' }).setFontSize(getRelative(50, this)).setOrigin(0.5).setDepth(1)
+    this.gameBoard = this.add.text(getGameWidth(this) * 0.5, getGameHeight(this) * 0.1, 'Balls Remaining   Score   Irritation Tolerance', { color: '#604000' }).setFontSize(getRelative(50, this)).setOrigin(0.5).setDepth(1)
     this.scoreText = this.add.text(getGameWidth(this) * 0.5, getGameHeight(this) * 0.15, this.score.toString(), { color: '#604000' }).setFontSize(getRelative(70, this)).setOrigin(0.5).setDepth(1)
     this.ballCountText = this.add.text(getGameWidth(this) * 0.33, getGameHeight(this) * 0.15, this.ballCount.toString(), { color: '#604000'}).setFontSize(getRelative(70, this)).setOrigin(0.5).setDepth(1)
     this.tolText = this.add.text(getGameWidth(this) * 0.65, getGameHeight(this) * 0.15, this.toleranceLevel.toString(), { color: '#604000'}).setFontSize(getRelative(70, this)).setOrigin(0.5).setDepth(1)
@@ -140,7 +137,6 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(floor, this.balls);
     this.physics.add.collider(leftWall, this.balls);
     this.physics.add.collider(rightWall, this.balls);
-    //this.physics.overlap(this.player,this.balls, (_, Ball) => { this.Ball.handleoverlap(); this.addScore() });
     this.physics.add.collider(this.player,this.balls, () => { this.addScore();/*this.bopSound?.play()*/ });
     this.physics.add.collider(this.balls, this.crabs, () => { this.cycleBall() });
     this.physics.add.collider(this.player, this.crabs, (_, Crab) => { Crab.destroy(), this.toleranceLevel--, this.tolText?.setText(this.toleranceLevel.toString())})
@@ -183,7 +179,7 @@ export class GameScene extends Phaser.Scene {
     if (this.balldead === true && this.ballCount > 0) {
       this.ballGenerate()
       this.balldead = false 
-    } else if (this.ballCount === 0) {
+    } else if (this.ballCount === 0 || this.toleranceLevel === 0) {
       window.history.back();
     }
   }

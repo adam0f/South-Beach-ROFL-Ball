@@ -37,11 +37,15 @@ html {
 }
 
 #devinfo{
-  background-color: #6cdfff;
+ 
   text-align: center;
   font-size:x-large;
   color: #7b5708;
   font-weight: bolder;
+}
+
+#devinfo span {
+  background-color: #6cdfff;
 }
 
 canvas {

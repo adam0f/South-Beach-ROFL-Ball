@@ -1,5 +1,5 @@
 import { getGameHeight, getGameWidth } from 'game/helpers'
-import { AavegotchiGameObject } from 'types';
+import { AavegotchiGameObject} from 'types'
 
 interface Props {
   scene: Phaser.Scene;
@@ -13,17 +13,15 @@ export class Player extends Phaser.GameObjects.Sprite {
   private leftKey: Phaser.Input.Keyboard.Key
   private rightKey: Phaser.Input.Keyboard.Key
   private jumpKey: Phaser.Input.Keyboard.Key
-  private selectedGotchi?:  AavegotchiGameObject; 
   private cursorKeys?: Phaser.Types.Input.Keyboard.CursorKeys;
+  private selectedGotchi?: AavegotchiGameObject
+  private energyScale: number
 
   constructor({ scene, x, y, key }: Props) {
     super(scene, x, y, key);
 
-    // init = (data: { selectedGotchi: AavegotchiGameObject }): void => {
-    //   this.selectedGotchi = data.selectedGotchi;
-    // };
+    this.energyScale = 0
 
-    
 
     // sprite
     this.setOrigin(0, 0);
@@ -50,17 +48,26 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.rightKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
     
     this.scene.add.existing(this);
+
+    //this.energyScale = (this.selectedGotchi?.withSetsNumericTraits[0] as number * 0.05)
+
+    
   }
+
+  init = (data: { selectedGotchi: AavegotchiGameObject }): void => {
+    this.selectedGotchi = data.selectedGotchi;
+  };
+
 
   update(): void {
 
     if (this.leftKey.isDown || this.cursorKeys?.left.isDown) 
     {
-      (this.body as Phaser.Physics.Arcade.Body).setVelocityX(-getGameWidth(this.scene) * 0.4)
+      (this.body as Phaser.Physics.Arcade.Body).setVelocityX(-getGameWidth(this.scene) * (0.4 + this.energyScale))
     }
     else if (this.rightKey.isDown || this.cursorKeys?.right.isDown)
     {
-      (this.body as Phaser.Physics.Arcade.Body).setVelocityX(getGameWidth(this.scene) * 0.4)
+      (this.body as Phaser.Physics.Arcade.Body).setVelocityX(getGameWidth(this.scene) * 0.3)
     }
     else 
     {
