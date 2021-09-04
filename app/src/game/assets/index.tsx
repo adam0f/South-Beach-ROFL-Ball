@@ -26,6 +26,7 @@ export const CRAB = 'crab'
 export const TREES = 'trees'
 export const BOP  = 'bop'
 export const POP = 'pop'
+export const MUSIC = 'music'
 
 // Save all in game assets in the public folder
 export const assets: Array<Asset | SpritesheetAsset> = [
@@ -86,4 +87,9 @@ export const assets: Array<Asset | SpritesheetAsset> = [
     src: 'assets/sounds/pop.mp3',
     type: 'AUDIO',
   },
+  {
+    key: MUSIC,
+    src: 'assets/sounds/music.wav',
+    type: 'AUDIO'
+  }
  ];

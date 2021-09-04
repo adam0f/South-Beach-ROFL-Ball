@@ -13,6 +13,7 @@ export class Ball extends Phaser.GameObjects.Sprite {
             key: 'roll',
             frameRate: 5,
             frames: this.anims.generateFrameNumbers('frame', { start: 0, end: 5}),
+            repeat: -1
           })          
     }
 

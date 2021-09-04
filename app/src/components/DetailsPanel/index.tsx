@@ -89,7 +89,7 @@ export const DetailsPanel = ({ selectedGotchi }: Props) => {
         );
       case 4:
         return (
-          <div id="devinfo"><span>Designed and developed by adamn.eth</span></div>
+          <a id="devinfo" href="https://twitter.com/adamn_eth" target="_blank" rel="noreferrer"><span>Designed and developed by adamn.eth</span></a>
         );
       default:
     }

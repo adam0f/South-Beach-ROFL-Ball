@@ -1,5 +1,5 @@
 import {
-  LEFT_CHEVRON, BG, CLICK, BOTTOM, TREES, BOP, POP
+  LEFT_CHEVRON, BG, CLICK, BOTTOM, TREES, BOP, POP, MUSIC
 } from 'game/assets';
 import { AavegotchiGameObject } from 'types';
 import { getGameWidth, getGameHeight, getRelative } from '../helpers';
@@ -32,8 +32,7 @@ export class GameScene extends Phaser.Scene {
   private back?: Phaser.Sound.BaseSound;
  private bopSound?: Phaser.Sound.BaseSound;
  private popSound?: Phaser.Sound.BaseSound;
- //private boopSound?: Phaser.Sound.BaseSound;
-
+ 
   constructor() {
     super(sceneConfig);
   }
@@ -79,13 +78,13 @@ export class GameScene extends Phaser.Scene {
 
   public create(): void {
     // Add layout
+    this.sound.add(MUSIC, { loop: true}) 
     this.toleranceLevel = Math.floor(50 - (this.selectedGotchi?.withSetsNumericTraits[3] as number * 0.4))
     this.add.image(getGameWidth(this) / 2, getGameHeight(this) / 2, BG).setDisplaySize(getGameWidth(this), getGameHeight(this));
     this.add.image(getGameWidth(this) / 2, getGameHeight(this) / 2, TREES).setDisplaySize(getGameWidth(this), getGameHeight(this)).setDepth(0.75);
     this.back = this.sound.add(CLICK, { loop: false });
     this.bopSound = this.sound.add(BOP, { loop: false});
     this.popSound = this.sound.add(POP, { loop: false});
-    //this.boopSound = this.sound.add(BOOP, {loop: false})
     this.createBackButton();
     this.gameBoard = this.add.text(getGameWidth(this) * 0.5, getGameHeight(this) * 0.1, 'Balls Remaining   Score   Irritation Tolerance', { color: '#604000' }).setFontSize(getRelative(50, this)).setOrigin(0.5).setDepth(1)
     this.scoreText = this.add.text(getGameWidth(this) * 0.5, getGameHeight(this) * 0.15, this.score.toString(), { color: '#604000' }).setFontSize(getRelative(70, this)).setOrigin(0.5).setDepth(1)
@@ -164,6 +163,7 @@ export class GameScene extends Phaser.Scene {
     this.add
       .image(getRelative(54, this), getRelative(54, this), LEFT_CHEVRON)
       .setOrigin(0)
+      .setDepth(2)
       .setInteractive({ useHandCursor: true })
       .setDisplaySize(getRelative(94, this), getRelative(94, this))
       .on('pointerdown', () => {
