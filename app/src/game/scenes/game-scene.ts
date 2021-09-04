@@ -30,8 +30,9 @@ export class GameScene extends Phaser.Scene {
 
   // Sounds
   private back?: Phaser.Sound.BaseSound;
- private bopSound?: Phaser.Sound.BaseSound;
- private popSound?: Phaser.Sound.BaseSound;
+  private bopSound?: Phaser.Sound.BaseSound;
+  private popSound?: Phaser.Sound.BaseSound;
+  private music?: Phaser.Sound.BaseSound
  
   constructor() {
     super(sceneConfig);
@@ -78,7 +79,8 @@ export class GameScene extends Phaser.Scene {
 
   public create(): void {
     // Add layout
-    this.sound.add(MUSIC, { loop: true}) 
+    this.music = this.sound.add(MUSIC, { loop: true}) 
+    this.music?.play()
     this.toleranceLevel = Math.floor(50 - (this.selectedGotchi?.withSetsNumericTraits[3] as number * 0.4))
     this.add.image(getGameWidth(this) / 2, getGameHeight(this) / 2, BG).setDisplaySize(getGameWidth(this), getGameHeight(this));
     this.add.image(getGameWidth(this) / 2, getGameHeight(this) / 2, TREES).setDisplaySize(getGameWidth(this), getGameHeight(this)).setDepth(0.75);
