@@ -4,7 +4,14 @@ import { CRAB } from "game/assets";
 export class Crab extends Phaser.GameObjects.Sprite {
     constructor(scene: Phaser.Scene) {
         super(scene, -100, -100, CRAB, 0)
-        this.setOrigin(0, 0)   
+        this.setOrigin(0, 0)
+        
+        this.anims.create({
+            key: 'scuddle',
+            frameRate: 5,
+            frames: this.anims.generateFrameNumbers(CRAB, { start: 0, end: 8}),
+            repeat: -1
+          })   
     }
 
     public activate = (size: number, speed: number, direction: number) => {
@@ -19,7 +26,8 @@ export class Crab extends Phaser.GameObjects.Sprite {
         } 
 
         this.displayHeight = getGameHeight(this.scene) * 0.1 *(size * 0.5)
-        this.displayWidth = getGameHeight(this.scene) * 0.1 *(size * 0.5)       
+        this.displayWidth = getGameHeight(this.scene) * 0.1 *(size * 0.5)
+        this.anims.play('scuddle', true)
     }
 
     public update = () => {
