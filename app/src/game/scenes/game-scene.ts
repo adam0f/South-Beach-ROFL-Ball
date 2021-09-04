@@ -1,5 +1,5 @@
 import {
-  LEFT_CHEVRON, BG, CLICK, BOTTOM
+  LEFT_CHEVRON, BG, CLICK, BOTTOM, TREES,
 } from 'game/assets';
 import { AavegotchiGameObject } from 'types';
 import { getGameWidth, getGameHeight, getRelative } from '../helpers';
@@ -24,16 +24,20 @@ export class GameScene extends Phaser.Scene {
   private ballCount = 3
   private ballCountText?: Phaser.GameObjects.Text
   private balldead = false
-  private toleranceLevel = 75
+  private toleranceLevel = 0
   private tolText?: Phaser.GameObjects.Text
+  private gameBoard?: Phaser.GameObjects.Text
 
   // Sounds
   private back?: Phaser.Sound.BaseSound;
+ // private bopSound?: Phaser.Sound.BaseSound;
+  // private popSound?: Phaser.Sound.BaseSound;
+  //private boopSound?: Phaser.Sound.BaseSound;
 
   constructor() {
     super(sceneConfig);
   }
-
+  
   init = (data: { selectedGotchi: AavegotchiGameObject }): void => {
     this.selectedGotchi = data.selectedGotchi;
   };
@@ -55,8 +59,9 @@ export class GameScene extends Phaser.Scene {
   private ballGenerate = () => {
     const dropLocation = 0
     const dropAngle = 600
+    const bounce = this.selectedGotchi?.withSetsNumericTraits[1] as number * 0.005
 
-    this.dropBall(dropLocation, dropAngle)
+    this.dropBall(dropLocation, dropAngle, bounce)
 
   // PLACEMENT NEEDS TO BE STATIC or based on trait - kinship????
   //   const placement = Math.floor(Math.random() * 6) + 1
@@ -69,20 +74,26 @@ export class GameScene extends Phaser.Scene {
   //  }
  }
 
-  private dropBall = (dropLocation: number, dropAngle: number): void => {
+  private dropBall = (dropLocation: number, dropAngle: number, bounce: number): void => {
     const ball: Ball = this.balls?.get()
-    ball.activate(dropLocation, dropAngle)
+    ball.activate(dropLocation, dropAngle, bounce)
 
   }
 
   public create(): void {
     // Add layout
+    this.toleranceLevel = (25 + (this.selectedGotchi?.withSetsNumericTraits[3] as number * 0.5))
     this.add.image(getGameWidth(this) / 2, getGameHeight(this) / 2, BG).setDisplaySize(getGameWidth(this), getGameHeight(this));
+    this.add.image(getGameWidth(this) / 2, getGameHeight(this) / 2, TREES).setDisplaySize(getGameWidth(this), getGameHeight(this)).setDepth(0.75);
     this.back = this.sound.add(CLICK, { loop: false });
+    //this.bopSound = this.sound.add(BOP, { loop: false});
+    //this.popSound = this.sound.add(POP, { loop: false});
+    //this.boopSound = this.sound.add(BOOP, {loop: false})
     this.createBackButton();
-    this.scoreText = this.add.text(getGameWidth(this) * 0.5, getGameHeight(this) * 0.15, this.score.toString(), { color: '0x005500'}).setFontSize(getRelative(94, this)).setOrigin(0.5).setDepth(1)
-    this.ballCountText = this.add.text(getGameWidth(this) * 0.2, getGameHeight(this) * 0.15, this.ballCount.toString(), { color: '0x000000'}).setFontSize(getRelative(94, this)).setOrigin(0.5).setDepth(1)
-    this.tolText = this.add.text(getGameWidth(this) * 0.8, getGameHeight(this) * 0.15, this.toleranceLevel.toString(), { color: '0x000000'}).setFontSize(getRelative(94, this)).setOrigin(0.5).setDepth(1)
+    this.gameBoard = this.add.text(getGameWidth(this) * 0.5, getGameHeight(this) * 0.1, 'Balls Remaining   Score   Irritation level', { color: '#604000' }).setFontSize(getRelative(50, this)).setOrigin(0.5).setDepth(1)
+    this.scoreText = this.add.text(getGameWidth(this) * 0.5, getGameHeight(this) * 0.15, this.score.toString(), { color: '#604000' }).setFontSize(getRelative(70, this)).setOrigin(0.5).setDepth(1)
+    this.ballCountText = this.add.text(getGameWidth(this) * 0.33, getGameHeight(this) * 0.15, this.ballCount.toString(), { color: '#604000'}).setFontSize(getRelative(70, this)).setOrigin(0.5).setDepth(1)
+    this.tolText = this.add.text(getGameWidth(this) * 0.65, getGameHeight(this) * 0.15, this.toleranceLevel.toString(), { color: '#604000'}).setFontSize(getRelative(70, this)).setOrigin(0.5).setDepth(1)
 
     const bottom = this.add.sprite(getGameWidth(this)/2 , getGameHeight(this) * 0.75 + getGameHeight(this) / 5.3333, BOTTOM).setDisplaySize(getGameWidth(this), getGameHeight(this) / 5.3333)  
     this.physics.add.existing(bottom, true)
@@ -103,9 +114,8 @@ export class GameScene extends Phaser.Scene {
 
     this.getCrab()
 
-    //reduce delay as score increases 
     this.time.addEvent({
-      delay: 1000,
+      delay: 750 + (this.selectedGotchi?.withSetsNumericTraits[2] as number * 20),
       callback: this.getCrab,
       callbackScope: this, 
       loop: true,
@@ -130,15 +140,16 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(floor, this.balls);
     this.physics.add.collider(leftWall, this.balls);
     this.physics.add.collider(rightWall, this.balls);
-    this.physics.add.collider(this.player,this.balls, () => { this.addScore() });
+    //this.physics.overlap(this.player,this.balls, (_, Ball) => { this.Ball.handleoverlap(); this.addScore() });
+    this.physics.add.collider(this.player,this.balls, () => { this.addScore();/*this.bopSound?.play()*/ });
     this.physics.add.collider(this.balls, this.crabs, () => { this.cycleBall() });
-    this.physics.add.collider(this.player, this.crabs, (player, Crab) => { Crab.destroy(), this.toleranceLevel--, this.tolText?.setText(this.toleranceLevel.toString())})
+    this.physics.add.collider(this.player, this.crabs, (_, Crab) => { Crab.destroy(), this.toleranceLevel--, this.tolText?.setText(this.toleranceLevel.toString())})
   }
   
   private cycleBall() {
     if (this.ballCount > 0) {
+    // this.popSound?.play();
       this.ballCount--;
-      //add a frame for popped ball
        Phaser.Actions.Call((this.balls as Phaser.GameObjects.Group).getChildren(), (ball) => { 
         (ball.body as Phaser.Physics.Arcade.Body).destroy();
         },

@@ -55,7 +55,8 @@ export const DetailsPanel = ({ selectedGotchi }: Props) => {
                 Aggression
               </p>
               <p>{selectedGotchi?.withSetsNumericTraits[1]}</p>
-            </div>
+             </div>
+             {renderModifier('Bounce force', calculatePercentage(selectedGotchi?.withSetsNumericTraits[i] as number))}
           </>
         );
       case 2:
@@ -69,6 +70,7 @@ export const DetailsPanel = ({ selectedGotchi }: Props) => {
               </p>
               <p>{selectedGotchi?.withSetsNumericTraits[2]}</p>
             </div>
+            {renderModifier('Crab spawn', calculatePercentage(selectedGotchi?.withSetsNumericTraits[i] as number))}
           </>
         );
       case 3:
@@ -82,6 +84,7 @@ export const DetailsPanel = ({ selectedGotchi }: Props) => {
               </p>
               <p>{selectedGotchi?.withSetsNumericTraits[3]}</p>
             </div>
+            {renderModifier('Irritation tolerance', calculatePercentage(selectedGotchi?.withSetsNumericTraits[i] as number))}
           </>
         );
       default:

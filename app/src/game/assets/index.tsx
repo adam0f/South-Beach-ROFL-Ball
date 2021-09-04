@@ -23,6 +23,9 @@ export const CLICK = 'click';
 export const BALL = 'ball'
 export const BOTTOM = 'bottom'
 export const CRAB = 'crab'
+export const TREES = 'trees'
+// export const BOP  = 'bop'
+// export const POP = 'pop'
 
 // Save all in game assets in the public folder
 export const assets: Array<Asset | SpritesheetAsset> = [
@@ -46,8 +49,8 @@ export const assets: Array<Asset | SpritesheetAsset> = [
     src: 'assets/sprites/ball.png',
     type: 'SPRITESHEET',
     data: {
-      frameWidth: 480,
-      frameHeight: 480,
+      frameWidth: 960 / 2,
+      frameHeight: 1920 / 4,
     }
   },
   {
@@ -64,8 +67,23 @@ export const assets: Array<Asset | SpritesheetAsset> = [
     src: 'assets/sprites/crab.png',
     type: 'SPRITESHEET',
     data: {
-      frameWidth: 461 / 1,
-      frameHeight: 321 / 1,
+      frameWidth: 1920 / 3,
+      frameHeight: 1920 / 3,
     }
   },
-];
+  {
+    key: TREES,
+    src: 'assets/images/trees.png',
+    type: 'IMAGE',
+  },
+  // {
+  //   key: BOP,
+  //   src: 'assets/audio/bop.wav',
+  //   type: 'AUDIO',
+  // },
+  // {
+  //   key: POP,
+  //   src: 'assets/audio/pop.mp3',
+  //   type: 'AUDIO',
+  // },
+ ];

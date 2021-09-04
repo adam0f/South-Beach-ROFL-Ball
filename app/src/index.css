@@ -30,6 +30,20 @@ html {
   font-weight: bolder;
 }
 
+#story{
+  font-size:large;
+  color: #7b5708;
+  font-weight: bold;
+}
+
+#devinfo{
+  background-color: #6cdfff;
+  text-align: center;
+  font-size:x-large;
+  color: #7b5708;
+  font-weight: bolder;
+}
+
 canvas {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

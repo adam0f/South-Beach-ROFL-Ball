@@ -18,14 +18,14 @@ export class Ball extends Phaser.GameObjects.Sprite {
     }
     
 //add perameter for bounce based on aggression 
-    public activate = (dropLocation: number, dropAngle: number) => {
+    public activate = (dropLocation: number, dropAngle: number, bounce: number) => {
 
 
         this.scene.physics.world.enable(this);
         (this.body as Phaser.Physics.Arcade.Body).setVelocityX(dropAngle);
         (this.body as Phaser.Physics.Arcade.Body).setGravityY(getGameHeight(this.scene) * 1);
         //(this.body as Phaser.Physics.Arcade.Body).setCollideWorldBounds(true, 0.9, 0.9);
-        (this.body as Phaser.Physics.Arcade.Body).setBounce(0.5, 1);
+        (this.body as Phaser.Physics.Arcade.Body).setBounce(0.5, 0.6 + bounce);
         this.setPosition(dropLocation, 0)
     }
 
