@@ -159,7 +159,7 @@ const Home = () => {
         </Modal>
       )}
       <div id="title">South Beach ROFL Ball!!</div>
-      <p id="controls">Controls:    move left = A or left arrow,   move right = D or right arrow,   jump = space or D or up arrow</p>
+      <p id="controls">Controls:    move left = A or left arrow,   move right = D or right arrow,   jump = space or W or up arrow</p>
       <div className={globalStyles.container}>
         <div className={styles.homeContainer}>
           <div className={styles.selectorContainer}>
