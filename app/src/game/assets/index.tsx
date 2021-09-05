@@ -27,6 +27,7 @@ export const TREES = 'trees'
 export const BOP  = 'bop'
 export const POP = 'pop'
 export const MUSIC = 'music'
+export const WAVES = 'waves'
 
 // Save all in game assets in the public folder
 export const assets: Array<Asset | SpritesheetAsset> = [
@@ -90,6 +91,15 @@ export const assets: Array<Asset | SpritesheetAsset> = [
   {
     key: MUSIC,
     src: 'assets/sounds/music.wav',
-    type: 'AUDIO'
-  }
+    type: 'AUDIO',
+  },
+  {
+    key: WAVES,
+    src: 'assets/sprites/waves.png',
+    type: 'SPRITESHEET',
+    data: {
+      frameWidth: (1024 * 6) / 1,
+      frameHeight: (576 * 6) / 6, 
+    }
+  },
  ];

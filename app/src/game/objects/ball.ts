@@ -11,10 +11,10 @@ export class Ball extends Phaser.GameObjects.Sprite {
 
         this.anims.create({
             key: 'roll',
-            frameRate: 5,
+            frameRate: 7,
             frames: this.anims.generateFrameNumbers(BALL, { start: 0, end: 5}),
             repeat: -1
-          })          
+          })       
     }
 
     public activate = (dropLocation: number, dropAngle: number, bounce: number) => {
@@ -23,7 +23,7 @@ export class Ball extends Phaser.GameObjects.Sprite {
         (this.body as Phaser.Physics.Arcade.Body).setGravityY(getGameHeight(this.scene) * 1);
         (this.body as Phaser.Physics.Arcade.Body).setBounce(0.5, 0.65 + bounce);
         this.setPosition(dropLocation, 0);
-        this.anims.play('roll', true) 
+        this.anims.play('roll', true)
     }
 
 }

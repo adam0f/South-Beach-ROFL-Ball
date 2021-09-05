@@ -1,5 +1,5 @@
 import {
-  LEFT_CHEVRON, BG, CLICK, BOTTOM, TREES, BOP, POP, MUSIC
+  LEFT_CHEVRON, BG, CLICK, BOTTOM, TREES, BOP, POP, MUSIC, WAVES
 } from 'game/assets';
 import { AavegotchiGameObject } from 'types';
 import { getGameWidth, getGameHeight, getRelative } from '../helpers';
@@ -27,6 +27,7 @@ export class GameScene extends Phaser.Scene {
   private toleranceLevel = 0
   private tolText?: Phaser.GameObjects.Text
   private gameBoard?: Phaser.GameObjects.Text
+  private wave?: Phaser.GameObjects.Group  
 
   // Sounds
   private back?: Phaser.Sound.BaseSound;
@@ -41,15 +42,6 @@ export class GameScene extends Phaser.Scene {
   init = (data: { selectedGotchi: AavegotchiGameObject }): void => {
     this.selectedGotchi = data.selectedGotchi;
   };
-
-  // private energyScale = () => {
-  //   const speed = this.selectedGotchi?.withSetsNumericTraits[0] as number * 0.5
-  //   this.passEnergy(speed)
-  // }
-  // private passEnergy = (speed: number): void => {
-  //   const playerEnergy = this.player?.get()
-  //   playerEnergy.activate(speed)
-  // }
 
   private getCrab = () => {
     const size = Math.floor(Math.random() * 3) + 1 
@@ -82,8 +74,8 @@ export class GameScene extends Phaser.Scene {
     this.music = this.sound.add(MUSIC, { loop: true}) 
     this.music?.play()
     this.toleranceLevel = Math.floor(50 - (this.selectedGotchi?.withSetsNumericTraits[3] as number * 0.4))
-    this.add.image(getGameWidth(this) / 2, getGameHeight(this) / 2, BG).setDisplaySize(getGameWidth(this), getGameHeight(this));
-    this.add.image(getGameWidth(this) / 2, getGameHeight(this) / 2, TREES).setDisplaySize(getGameWidth(this), getGameHeight(this)).setDepth(0.75);
+    this.add.image(getGameWidth(this) * 0.5, getGameHeight(this) * 0.5, BG).setDisplaySize(getGameWidth(this), getGameHeight(this));
+    this.add.image(getGameWidth(this) * 0.5, getGameHeight(this) * 0.5, TREES).setDisplaySize(getGameWidth(this), getGameHeight(this)).setDepth(0.75);
     this.back = this.sound.add(CLICK, { loop: false });
     this.bopSound = this.sound.add(BOP, { loop: false});
     this.popSound = this.sound.add(POP, { loop: false});
@@ -93,7 +85,7 @@ export class GameScene extends Phaser.Scene {
     this.ballCountText = this.add.text(getGameWidth(this) * 0.33, getGameHeight(this) * 0.15, this.ballCount.toString(), { color: '#604000'}).setFontSize(getRelative(70, this)).setOrigin(0.5).setDepth(1)
     this.tolText = this.add.text(getGameWidth(this) * 0.65, getGameHeight(this) * 0.15, this.toleranceLevel.toString(), { color: '#604000'}).setFontSize(getRelative(70, this)).setOrigin(0.5).setDepth(1)
 
-    const bottom = this.add.sprite(getGameWidth(this)/2 , getGameHeight(this) * 0.75 + getGameHeight(this) / 5.3333, BOTTOM).setDisplaySize(getGameWidth(this), getGameHeight(this) / 5.3333)  
+    const bottom = this.add.sprite(getGameWidth(this) * 0.5 , getGameHeight(this) * 0.75 + getGameHeight(this) * 0.1875, BOTTOM).setDisplaySize(getGameWidth(this), getGameHeight(this) * 0.1875).setVisible(false)
     this.physics.add.existing(bottom, true)
 
     const floor = this.add.rectangle(0, getGameHeight(this) * 0.9).setDisplaySize(getGameWidth(this), 50).setOrigin(0, 0)
@@ -105,13 +97,25 @@ export class GameScene extends Phaser.Scene {
     const rightWall = this.add.rectangle(getGameWidth(this), -getGameHeight(this) * 40, 0x000000).setDisplaySize(50, getGameHeight(this) * 50,).setOrigin(0, 0)
     this.physics.add.existing(rightWall, true)
 
+    const wave = this.add.sprite(getGameWidth(this) * 0.5, getGameHeight(this) * 0.62, WAVES, 0).setDisplaySize(getGameWidth(this), getGameHeight(this) * 0.1875)
+    this.physics.add.existing(wave, true)
+
+    this.anims.create({
+      key: 'wave',
+      frameRate: 3,
+      frames: this.anims.generateFrameNumbers(WAVES, { start: 0, end: 5}),
+      repeat: -1
+    })
+
+    wave.anims.play('wave')    
+
     this.crabs = this.add.group({
       maxSize: 500,
       classType: Crab,
-    })
+      })
 
     this.getCrab()
-
+    
     this.time.addEvent({
       delay: 750 + (this.selectedGotchi?.withSetsNumericTraits[2] as number * 20),
       callback: this.getCrab,
@@ -131,7 +135,8 @@ export class GameScene extends Phaser.Scene {
       scene: this,
       x: getGameWidth(this) / 2,
       y: getGameHeight(this) / 2,
-      key: this.selectedGotchi?.spritesheetKey || ''
+      key: this.selectedGotchi?.spritesheetKey || '',
+      traits: this.selectedGotchi?.withSetsNumericTraits
     })
   
     this.physics.add.collider(bottom, this.player);
@@ -147,6 +152,7 @@ export class GameScene extends Phaser.Scene {
     if (this.ballCount > 0) {
      this.popSound?.play();
       this.ballCount--;
+      this.balls?.setVisible(false)
        Phaser.Actions.Call((this.balls as Phaser.GameObjects.Group).getChildren(), (ball) => { 
         (ball.body as Phaser.Physics.Arcade.Body).destroy();
         },
