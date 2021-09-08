@@ -17,9 +17,18 @@ const connectedGotchis = {};
 
 io.on('connection', function (socket: Socket) {
     const userId = socket.id;
-
     console.log('A user connected: ' + userId);
     connectedGotchis[userId] = {id: userId};
+    console.log(connectedGotchis)
+
+    socket.on('gameOver', () => {
+      console.log('game started: ', userId)
+    })
+
+    socket.on('gameOver', async ({ score }: { score: number}) => {
+      console.log('gameOver', userId)
+      console.log('score: ', score)
+    })
 
     socket.on('handleDisconnect', () => {
       socket.disconnect();

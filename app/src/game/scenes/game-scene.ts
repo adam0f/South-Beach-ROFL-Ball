@@ -4,6 +4,7 @@ import {
 import { AavegotchiGameObject } from 'types';
 import { getGameWidth, getGameHeight, getRelative } from '../helpers';
 import { Player, Ball, Crab } from 'game/objects';
+import { Socket } from 'socket.io-client';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -15,6 +16,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
  * Scene where gameplay takes place
  */
 export class GameScene extends Phaser.Scene {
+  private socket?: Socket
   private player?: Player;
   private selectedGotchi?: AavegotchiGameObject;
   private balls?: Phaser.GameObjects.Group
@@ -28,6 +30,7 @@ export class GameScene extends Phaser.Scene {
   private tolText?: Phaser.GameObjects.Text
   private gameBoard?: Phaser.GameObjects.Text
   private wave?: Phaser.GameObjects.Group  
+  private isGameOver = false
 
   // Sounds
   private back?: Phaser.Sound.BaseSound;
@@ -71,6 +74,8 @@ export class GameScene extends Phaser.Scene {
 
   public create(): void {
     // Add layout
+    this.socket = this.game.registry.values.socket
+    this.socket?.emit('gamestarted')
     this.music = this.sound.add(MUSIC, { loop: true}) 
     this.music?.play()
     this.toleranceLevel = Math.floor(50 - (this.selectedGotchi?.withSetsNumericTraits[3] as number * 0.4))
@@ -187,8 +192,13 @@ export class GameScene extends Phaser.Scene {
     if (this.balldead === true && this.ballCount > 0) {
       this.ballGenerate()
       this.balldead = false 
+      this.isGameOver = true
+
+
+      //fix this ...
     } else if (this.ballCount === 0 || this.toleranceLevel === 0) {
       window.history.back();
+      this.socket?.emit('gameOver', {score: this.score});
     }
   }
 }
