@@ -31,6 +31,8 @@ export class GameScene extends Phaser.Scene {
   private gameBoard?: Phaser.GameObjects.Text
   private wave?: Phaser.GameObjects.Group  
   private isGameOver = false
+  private scoreFlip = true
+  private scoreCount = 0 
 
   // Sounds
   private back?: Phaser.Sound.BaseSound;
@@ -70,6 +72,11 @@ export class GameScene extends Phaser.Scene {
   private dropBall = (dropLocation: number, dropAngle: number, bounce: number): void => {
     const ball: Ball = this.balls?.get()
     ball.activate(dropLocation, dropAngle, bounce)
+  }
+
+  private scoreCounter() {
+    this.scoreCount++    
+    this.scoreFlip = true    
   }
 
   public create(): void {
@@ -118,13 +125,18 @@ export class GameScene extends Phaser.Scene {
       maxSize: 500,
       classType: Crab,
       })
-
-    this.getCrab()
     
     this.time.addEvent({
       delay: 750 + (this.selectedGotchi?.withSetsNumericTraits[2] as number * 20),
       callback: this.getCrab,
       callbackScope: this, 
+      loop: true,
+    })
+
+    this.time.addEvent({
+      delay: 250, 
+      callback: this.scoreCounter,
+      callbackScope: this,
       loop: true,
     })
 
@@ -148,10 +160,11 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(floor, this.balls);
     this.physics.add.collider(leftWall, this.balls);
     this.physics.add.collider(rightWall, this.balls);
-    this.physics.add.collider(this.player,this.balls, () => { this.addScore(); this.bopSound?.play() });
+    this.physics.add.collider(this.player,this.balls, () => { this.addScore() });      
     this.physics.add.collider(this.balls, this.crabs, () => { this.cycleBall() });
     this.physics.add.collider(this.player, this.crabs, (_, Crab) => { Crab.destroy(), this.toleranceLevel--, this.tolText?.setText(this.toleranceLevel.toString())})
   }
+  
   
   private cycleBall() {
     if (this.ballCount > 0) {
@@ -168,8 +181,13 @@ export class GameScene extends Phaser.Scene {
   }
 
   private addScore() {
-    this.score += 1
-    this.scoreText?.setText(this.score.toString())
+    if( this.scoreFlip === true) {
+      this.scoreFlip = false
+      this.bopSound?.play() 
+      this.score += 1
+      this.scoreText?.setText(this.score.toString())
+    }
+
   }
 
   private createBackButton = () => {
@@ -194,11 +212,10 @@ export class GameScene extends Phaser.Scene {
       this.balldead = false 
       this.isGameOver = true
 
-
       //fix this ...
     } else if (this.ballCount === 0 || this.toleranceLevel === 0) {
       window.history.back();
-      this.socket?.emit('gameOver', {score: this.score});
+      this.socket?.emit('gameOver', {score: this.score, scoreCount: this.scoreCount});
     }
   }
 }

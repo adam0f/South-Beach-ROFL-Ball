@@ -40,3 +40,7 @@ flappigotchi-service-account.json
 */yarn-error.log*
 */firebase-debug.log*
 */firebase-debug.*.log*
+
+# New
+
+service-account.json
