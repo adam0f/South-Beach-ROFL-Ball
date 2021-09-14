@@ -82,7 +82,7 @@ export class GameScene extends Phaser.Scene {
   public create(): void {
     // Add layout
     this.socket = this.game.registry.values.socket
-    this.socket?.emit('gamestarted')
+    this.socket?.emit('gameStarted')
     this.music = this.sound.add(MUSIC, { loop: true}) 
     this.music?.play()
     this.toleranceLevel = Math.floor(50 - (this.selectedGotchi?.withSetsNumericTraits[3] as number * 0.4))
@@ -187,7 +187,6 @@ export class GameScene extends Phaser.Scene {
       this.score += 1
       this.scoreText?.setText(this.score.toString())
     }
-
   }
 
   private createBackButton = () => {
